@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Footsteps: The Road to Wealth</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #00c6fb 0%, #005bea 100%);
+        }
+        #game-container {
+            width: 800px;
+            height: 600px;
+            background: linear-gradient(135deg, #656566 0%, #005bea 100%) no-repeat center center;
+            background-size: cover;
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .road {
+            width: 90%;
+            height: 40px;
+            background: linear-gradient(90deg, #666 0%, #888 50%, #666 100%);
+            position: absolute;
+            bottom: 50px;
+            left: 5%;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .checkpoint {
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #fff 0%, #f0f0f0 100%);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .checkpoint:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        #player {
+            width: 80px;
+            height: 40px;
+            background-image: url(./Jenish\ \(1\).png);
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            position: absolute;
+            bottom: 70px;
+            left: 5%;
+            transition: left 1s ease;
+            z-index: 10;
+        }
+        #finance-lesson, #end-screen {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            display: none;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        #coin-display {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 28px;
+            color: #ffd700;
+            background-color: rgba(0,0,0,0.5);
+            padding: 10px 20px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #coin-display::before {
+            content: '🪙';
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div class="road"></div>
+        <div id="player"></div>
+        <div id="coin-display">0</div>
+        <div id="finance-lesson">
+            <h2 id="lesson-title"></h2>
+            <p id="lesson-content"></p>
+            <button onclick="completeLesson()">Complete Lesson</button>
+        </div>
+        <div id="end-screen">
+            <h2>Congratulations!</h2>
+            <p>You've completed all financial lessons and earned <span id="total-coins"></span> coins!</p>
+            <p>You're now ready to start your journey to financial success!</p>
+            <button onclick="restartGame()">Play Again</button>
+        </div>
+    </div>
+
+    <script>
+        const checkpoints = [
+            { 
+                x: '10%', 
+                lesson: 'Budgeting Basics', 
+                content: 'A budget is a financial plan that helps you track income and expenses. Start by listing all sources of income and categorizing your expenses. Aim to save at least 20% of your income. Use the 50/30/20 rule: 50% for needs, 30% for wants, and 20% for savings and debt repayment.'
+            },
+            { 
+                x: '30%', 
+                lesson: 'Saving Strategies', 
+                content: 'Saving is crucial for financial stability. Set up an emergency fund aiming for 3-6 months of living expenses. Automate your savings by setting up automatic transfers to a separate savings account. Look for high-yield savings accounts to earn more interest. Consider using apps that round up purchases and save the difference.'
+            },
+            { 
+                x: '50%', 
+                lesson: 'Understanding Credit', 
+                content: 'Credit scores range from 300-850 and affect your ability to borrow money. Pay bills on time, keep credit utilization below 30%, and don\'t close old credit accounts to maintain a good score. Check your credit report annually for free at AnnualCreditReport.com. Be cautious with credit cards and understand the terms before applying.'
+            },
+            { 
+                x: '70%', 
+                lesson: 'Introduction to Investing', 
+                content: 'Investing helps grow wealth over time. Start with understanding different investment types: stocks, bonds, mutual funds, and ETFs. Consider your risk tolerance and investment timeline. Diversification is key to managing risk. Look into tax-advantaged accounts like 401(k)s and IRAs for retirement saving. Remember: higher potential returns often come with higher risk.'
+            },
+            { 
+                x: '90%', 
+                lesson: 'Stock Market Fundamentals', 
+                content: 'The stock market is where company shares are bought and sold. Understand terms like dividends, P/E ratio, and market capitalization. Consider starting with index funds for broad market exposure. Do thorough research before investing in individual stocks. Be prepared for market volatility and avoid making emotional investment decisions. Remember: past performance doesn\'t guarantee future results.'
+            }
+        ];
+
+        let currentCheckpoint = 0;
+        let coins = 0;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeGame();
+        });
+
+        function initializeGame() {
+            checkpoints.forEach((checkpoint, index) => {
+                const checkpointElement = document.createElement('div');
+                checkpointElement.className = 'checkpoint';
+                checkpointElement.style.left = checkpoint.x;
+                checkpointElement.textContent = index + 1;
+                checkpointElement.onclick = () => showLesson(index);
+                document.getElementById('game-container').appendChild(checkpointElement);
+            });
+        }
+
+        function showLesson(index) {
+            if (index > currentCheckpoint) return;
+            const lesson = checkpoints[index];
+            document.getElementById('lesson-title').textContent = lesson.lesson;
+            document.getElementById('lesson-content').textContent = lesson.content;
+            document.getElementById('finance-lesson').style.display = 'block';
+        }
+
+        function completeLesson() {
+            document.getElementById('finance-lesson').style.display = 'none';
+            if (currentCheckpoint < checkpoints.length - 1) {
+                currentCheckpoint++;
+                setTimeout(() => {
+                    movePlayer();
+                    coins += 100;
+                    updateCoinDisplay();
+                }, 300); // Delay to visually separate lessons
+            } else {
+                endGame();
+            }
+        }
+
+        function movePlayer() {
+            const player = document.getElementById('player');
+            player.style.left = checkpoints[currentCheckpoint].x;
+        }
+
+        function updateCoinDisplay() {
+            const coinDisplay = document.getElementById('coin-display');
+            coinDisplay.textContent = coins;
+            coinDisplay.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                coinDisplay.style.transform = 'scale(1)';
+            }, 300);
+        }
+
+        function endGame() {
+            document.getElementById('total-coins').textContent = coins;
+            document.getElementById('end-screen').style.display = 'block';
+        }
+
+        function restartGame() {
+            currentCheckpoint = 0;
+            coins = 0;
+            updateCoinDisplay();
+            document.getElementById('player').style.left = '5%';
+            document.getElementById('end-screen').style.display = 'none';
+        }
+
+        initializeGame();
+    </script>
+</body>
+</html>
