@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Footsteps: The Road to Wealth</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div class="road"></div>
+        <div id="player"></div>
+        <div id="coin-display">0</div>
+        <div id="finance-lesson">
+            <h2 id="lesson-title"></h2>
+            <p id="lesson-content"></p>
+            <button onclick="completeLesson()">Complete Lesson</button>
+        </div>
+        <div id="end-screen">
+            <h2>Congratulations!</h2>
+            <p>You've completed all financial lessons and earned <span id="total-coins"></span> coins!</p>
+            <p>You're now ready to start your journey to financial success!</p>
+            <button onclick="restartGame()">Play Again</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
